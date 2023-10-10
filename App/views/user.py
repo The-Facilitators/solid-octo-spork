@@ -25,23 +25,24 @@ def get_competition_endpoint():
     return jsonify(competitions)
 
 
-@user_views.route('/api/competitions/{{id}}', methods=['GET'])
-def get_competition_by_id_endpoint():
-    competitions = get_competition(id)
-    return jsonify(competitions)
+#### route to see a competition and its participants and other details
+@user_views.route('/api/competitions/<int:id>', methods=['GET'])
+def get_competition_by_id_endpoint(id):
+    competition = get_competition(id)
+    if competition:
+        return jsonify(competition.to_dict()) 
+    else:
+        return jsonify({"error": "Competition not found"})
 
 
 
-@user_views.route('/api/details/{{username}}', methods=['GET'])
-def get_detail_endpoint(username):
-  display_user_info(username)
-    
-
-"""@user_views.route('/api/users', methods=['GET'])
-def get_users_action():
-    students = get_all_users_json()
-    return jsonify(users)
-"""
+## route to see a student's details/ profile
+@user_views.route('/api/details/<username>', methods=['GET'])
+def get_user_details_endpoint(username):
+  user_info = display_user_info(username)
+  if user_info is None:
+    return jsonify({"error": f"{username} is not a valid student username"})
+  return jsonify(user_info)
 
 @user_views.route('/api/users', methods=['GET'])
 def get_user_page1(): 
@@ -72,12 +73,17 @@ def static_user_page():
   return send_from_directory('static', 'static-user.html')
 
 
-@user_views.route('/create_competition')
+@user_views.route('/create_competition', methods=['POST'])
 def create_competition():
-    name = "Example Competition"
-    ExampleId=4
-    create_Competition(name, ExampleId)
-    return "Competition created successfully!"
+    data = request.json
+    admin=get_Admin(data['CreatorId'])
+    if admin:
+      comp=get_Competition(data['name'])
+      if comp is None:
+        comp=create_Competition(data['name'], data['CreatorId'])
+        return jsonify({'message': f"Competition {comp.name} created"})
+      return jsonify({'message': f"Competition {comp.name} already exists"}), 409
+    return jsonify({'message': f"Admin {data['CreatorId']} does not exist! Stop the shenanigans students"}), 409
 
 @user_views.route('/login', methods=['POST'])
 def user_login_view():

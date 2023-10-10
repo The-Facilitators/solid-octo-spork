@@ -17,5 +17,14 @@ class Competition(db.Model):
             'name': self.name
         }
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "creator_id": self.creator_id,
+            "participants": [student.username for student in self.participants]
+        }
+    
+
     def __repr__(self):
         return f'<Competition {self.id} : {self.name}>'

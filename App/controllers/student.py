@@ -81,11 +81,12 @@ def update_student(id, username):
         return db.session.commit()
     return None
 
-def display_user_info(username):
+"""def display_user_info(username):
   student = Student.query.filter_by(username=username).first()
   
   if not student:
     print(f'{username} is not a valid student username')
+    return None
   else:
     score = get_points(student.id)
     student.set_points(score)
@@ -93,4 +94,18 @@ def display_user_info(username):
     print(student.get_json())
     print("Participated in the following competitions:")
     for comp in student.competitions:
-      print(f'{comp.name} ')
+      print(f'{comp.name} ')"""
+
+def display_user_info(username):
+    student = Student.query.filter_by(username=username).first()
+
+    if not student:
+        return None
+    else:
+        score = get_points(student.id)
+        student.set_points(score)
+        profile_info = {
+            "profile": student.get_json(),
+            "participated_competitions": [comp.name for comp in student.competitions]
+        }
+        return profile_info
