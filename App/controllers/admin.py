@@ -43,3 +43,12 @@ def update_Admin(id, username):
         db.session.add(Admin)
         return db.session.commit()
     return None
+
+def notification(student):
+    if student.ranking != student.previous_ranking:
+        student.previous_ranking = student.ranking
+        db.session.add(student)
+        db.session.commit()
+        print(f'{student.username} has changed rankings to Rank {student.ranking}')
+    else:
+        print(f'{student.username} has not changed rankings')

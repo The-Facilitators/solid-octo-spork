@@ -154,8 +154,7 @@ def add_results():
 
     if not student:
       return jsonify({"error": f'{student_username} is not a valid username'})
-    
- 
+
     for participant in comp.participants:
       if participant.username == student.username:
         participation = Participation.query.filter_by(user_id=student.id, competition_id=comp.id).first()
@@ -168,11 +167,19 @@ def add_results():
         db.session.add(student)
         db.session.commit()
         update_rankings()
+        notify_ranking_change(student)
+
         return jsonify({"message": "Score added!"})
         
     return jsonify({"error": f'{student_username} did not participate in {competition_name}'})
     
   return jsonify({"error": f'{admin_username} does not have access to add results for {competition_name}'})
+
+
+
+
+
+
 
 
 
