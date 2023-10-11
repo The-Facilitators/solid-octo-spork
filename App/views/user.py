@@ -19,10 +19,34 @@ def get_user_page():
     return render_template('users.html', students=students)
 
 
+"""@user_views.route('/api/competitions', methods=['GET'])
+def get_competition_endpoint():
+    competitions = get_all_competitions()
+    if competitions:
+      comp = [competition.to_dict() for competition in competitions]
+      return jsonify(comp)
+    else:
+      return jsonify({"message": "No competitions found!"})"""
+
+"""
 @user_views.route('/api/competitions', methods=['GET'])
 def get_competition_endpoint():
     competitions = get_all_competitions()
-    return jsonify(competitions)
+    if competitions:
+        comp = [competition.to_dict() for competition in competitions]  # Use a lowercase variable name
+        return jsonify(comp)  # Return the 'comp' variable, not 'competitions'
+    else:
+        return jsonify({"message": "No competitions found!"})"""
+
+
+@user_views.route('/api/competitions', methods=['GET'])
+def get_competition_endpoint():
+    competitions = get_all_competitions()
+    if competitions:
+        return jsonify(competitions)  # Return the list of dictionaries as is
+    else:
+        return jsonify({"message": "No competitions found!"})
+
 
 
 #### route to see a competition and its participants and other details
@@ -72,6 +96,7 @@ def create_user_action():
 def static_user_page():
   return send_from_directory('static', 'static-user.html')
 
+@user_views.route('/static/users', methods=['POST'])
 
 @user_views.route('/create_competition', methods=['POST'])
 def create_competition():
@@ -175,7 +200,26 @@ def display_rankings():
   else:
     return jsonify({"message": "No students found!"})
 
- 
+
+@user_views.route('/api/register', methods=['POST'])
+def register_student_for_competition():
+  data = request.json
+  username = data['username']
+  competition_name = data['competition_name']
+
+  if not username or not competition_name:
+    return jsonify({"message": "Missing data"}), 400
+
+  student = Student.query.filter_by(username=username).first()
+  if student:
+    competition = Competition.query.filter_by(name=competition_name).first()
+    if competition:
+      student.participate_in_competition(competition)
+      return jsonify({"message": f'{username} registered for {competition_name}'})
+    else:
+      return jsonify({"message": f'{competition_name} was not found'}), 404
+  else:
+    return jsonify({"message": f'{username} was not found'}), 404
 
 
 
@@ -209,3 +253,5 @@ def display_rankings():
         return jsonify({"rankings": rankings})
 
       """
+
+
