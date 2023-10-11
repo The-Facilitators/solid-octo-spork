@@ -175,7 +175,7 @@ def add_results():
   if not comp:
     return jsonify({"error": f'{competition_name} is not a valid competition'})
     
-  if comp.creator_id == admin.id:
+  if comp.creator_id == admin.staff_id:
     student = Student.query.filter_by(username=data['student_username']).first()
 
     if not student:
