@@ -159,8 +159,12 @@ def identify_view():
 ### route to add points to a student
 @user_views.route('/api/addResults', methods=['POST'])
 def add_results():
+
   data = request.json
-  score=data['score']
+  admin_username = data.get('admin_username')  # Ensure the key exists in the JSON data
+  student_username = data.get('student_username')
+  competition_name = data.get('competition_name')
+  score = data.get('score')
 
   comp = Competition.query.filter_by(name=data['competition_name']).first()
   admin = Admin.query.filter_by(username=data['admin_username']).first()
