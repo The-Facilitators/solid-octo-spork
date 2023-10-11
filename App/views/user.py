@@ -59,6 +59,31 @@ def get_competition_by_id_endpoint(id):
         return jsonify({"error": "Competition not found"})
 
 
+@user_views.route('/participate', methods=['POST'])
+def participate():
+    data = request.json
+    username = data.get('username')
+    competition_name = data.get('competition_name')
+
+    if not username or not competition_name:
+        return jsonify({"error": "Missing username or competition_name"}), 400
+
+    student = Student.query.filter_by(username=username).first()
+    competition = Competition.query.filter_by(name=competition_name).first()
+
+    if not student:
+        return jsonify({"error": f"Student with username {username} not found"}), 404
+
+    if not competition:
+        return jsonify({"error": f"Competition {competition_name} not found"}), 404
+
+    participation = student.participate_in_competition(competition)
+
+    if participation:
+        return jsonify({"message": f"{username} registered for {competition_name}"})
+    else:
+        return jsonify({"error": f"{username} is already registered for {competition_name}"})
+
 
 ## route to see a student's details/ profile
 @user_views.route('/api/details/<username>', methods=['GET'])
@@ -171,7 +196,6 @@ def add_results():
     return jsonify({"error": f'{student_username} did not participate in {competition_name}'})
     
   return jsonify({"error": f'{admin_username} does not have access to add results for {competition_name}'})
-
 
 
 
