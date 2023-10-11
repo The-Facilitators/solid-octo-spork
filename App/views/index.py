@@ -12,10 +12,12 @@ def index_page():
 def init():
     db.drop_all()
     db.create_all()
-    rob = create_Admin('rob', 'robpass', 301)
-    sally = create_Student('sally', 'sallypass')
-    bob = create_Student('bob', 'bobpass')
-    RunTime = create_Competition('SuperSprint',301)
+    create_Admin('Kim', 'Possible',33)
+    create_Admin('Dr', 'robpass', 991)
+    create_Student('sally', 'sallypass')
+    create_Student('robin', 'Hood')
+    create_Competition('RunTime',33)
+    create_Competition('SuperSprint',991)
     print( 'database intialized' )
     return jsonify(message='db initialized!')
 

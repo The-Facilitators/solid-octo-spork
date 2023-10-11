@@ -105,3 +105,107 @@ def identify_view():
   admin = Admin.query.filter_by(username=username).first()
   if admin:
     return jsonify(admin.get_json())#jsonify admin object
+
+### route to add points to a student
+@user_views.route('/api/addResults', methods=['POST'])
+def add_results():
+  data = request.json
+  admin_username=get_Admin(data['admin_username'])
+  student_username=get_Student(data['student_username'])
+  competition_name=get_Competition(data['competition_name'])
+  score=data['score']
+
+  comp = Competition.query.filter_by(name=competition_name).first()
+  admin = Admin.query.filter_by(username=admin_username).first()
+
+  if not admin:
+    return jsonify({"error": f'{admin_username} is not an admin'})
+      
+  if not comp:
+    return jsonify({"error": f'{competition_name} is not a valid competition'})
+    
+  if comp.creator_id == admin.id:
+    student = Student.query.filter_by(username=student_username).first()
+
+    if not student:
+      return jsonify({"error": f'{student_username} is not a valid username'})
+    
+ 
+    for participant in comp.participants:
+      if participant.username == student.username:
+        participation = Participation.query.filter_by(user_id=student.id, competition_id=comp.id).first()
+        participation.update_points(score)
+        participation.points_earned = score
+        db.session.add(participation)
+        db.session.commit()
+        score = get_points(student.id)
+        student.set_points(score)
+        db.session.add(student)
+        db.session.commit()
+        update_rankings()
+        return jsonify({"message": "Score added!"})
+        
+    return jsonify({"error": f'{student_username} did not participate in {competition_name}'})
+    
+  return jsonify({"error": f'{admin_username} does not have access to add results for {competition_name}'})
+
+
+
+### View rankings
+@user_views.route('/api/rankings', methods=['GET'])
+def display_rankings():
+  students = get_all_students()
+
+  if students:
+    students.sort(key=sort_rankings, reverse=True)
+    curr_high = students[0].points
+    curr_rank = 1
+    count = 1
+    for student in students:
+      if curr_high != student.points:
+        curr_rank = count
+        curr_high = student.points
+      stud = get_student(student.id)
+      stud.set_ranking(curr_rank)
+      db.session.add(stud)
+      db.session.commit()
+      count += 1
+
+    return jsonify({"rankings": [student.get_json() for student in students]})
+  else:
+    return jsonify({"message": "No students found!"})
+
+ 
+
+
+
+""""
+
+   if not students:
+        return jsonify({"message": "No students found!"})
+    else:
+        rankings = []
+        count = 1
+        students.sort(key=sort_rankings, reverse=True)
+        curr_high = students[0]["total points"]
+        curr_rank = 1
+        for student in students:
+            if curr_high != student["total points"]:
+                curr_rank = count
+                curr_high = student["total points"]
+
+            stud = get_student(student["id"])
+            stud.set_ranking(curr_rank)
+            stud.set_previous_ranking(curr_rank)
+            db.session.add(stud)
+            db.session.commit()
+            rankings.append({
+                "Rank": curr_rank,
+                "Student": stud.username,
+                "Points": stud.points
+            })
+            count += 1
+
+        return jsonify({"rankings": rankings})
+
+      """

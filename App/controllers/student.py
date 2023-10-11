@@ -42,8 +42,11 @@ def get_ranking(id):
     student = get_student(id)
     return student.ranking
 
-def sort_rankings(value):
-  return value["total points"]
+#def sort_rankings(value):
+#  return value["total points"]
+
+def sort_rankings(student):
+    return student.points
 
 def update_rankings():
   students = get_all_students_json()
