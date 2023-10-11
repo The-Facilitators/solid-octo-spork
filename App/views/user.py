@@ -135,13 +135,10 @@ def identify_view():
 @user_views.route('/api/addResults', methods=['POST'])
 def add_results():
   data = request.json
-  admin_username=get_Admin(data['admin_username'])
-  student_username=get_Student(data['student_username'])
-  competition_name=get_Competition(data['competition_name'])
   score=data['score']
 
-  comp = Competition.query.filter_by(name=competition_name).first()
-  admin = Admin.query.filter_by(username=admin_username).first()
+  comp = Competition.query.filter_by(name=data['competition_name']).first()
+  admin = Admin.query.filter_by(username=data['admin_username']).first()
 
   if not admin:
     return jsonify({"error": f'{admin_username} is not an admin'})
@@ -150,7 +147,7 @@ def add_results():
     return jsonify({"error": f'{competition_name} is not a valid competition'})
     
   if comp.creator_id == admin.id:
-    student = Student.query.filter_by(username=student_username).first()
+    student = Student.query.filter_by(username=data['student_username']).first()
 
     if not student:
       return jsonify({"error": f'{student_username} is not a valid username'})
