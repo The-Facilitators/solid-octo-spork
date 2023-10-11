@@ -77,11 +77,16 @@ def create_user_endpoint():
     return jsonify({'message': f"user {data['username']} created"})
     
 #####create _Admin changed to create_user
+
 @auth_views.route('/api/admin', methods=['POST'])
 def create_admin():
     data = request.json
-    create_Admin(data['username'], data['password'], data['staff_id'])
-    return jsonify({'message': f"admin {data['username']} created"})
+    admin = create_Admin(data['username'], data['password'], data['staff_id'])
+    if admin:
+        return jsonify({'message': f"admin {admin.username} created"})
+    else:
+        return jsonify({'message': f"Failed to create admin"})
+
 
 @auth_views.route('/api/login', methods=['POST'])
 def user_login_api():
