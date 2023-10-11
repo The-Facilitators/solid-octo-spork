@@ -126,7 +126,7 @@ def static_user_page():
 @user_views.route('/create_competition', methods=['POST'])
 def create_competition():
     data = request.json
-    admin=get_Admin(data['CreatorId'])
+    admin = Admin.query.filter_by(staff_id=data['CreatorId']).first()
     if admin:
       comp=get_Competition(data['name'])
       if comp is None:
