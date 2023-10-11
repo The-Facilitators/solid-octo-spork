@@ -80,7 +80,7 @@ def create_user_endpoint():
 @auth_views.route('/api/admin', methods=['POST'])
 def create_admin():
     data = request.json
-    create_user(data['username'], data['password'], data['staff_id'])
+    create_Admin(data['username'], data['password'], data['staff_id'])
     return jsonify({'message': f"admin {data['username']} created"})
 
 @auth_views.route('/api/login', methods=['POST'])
