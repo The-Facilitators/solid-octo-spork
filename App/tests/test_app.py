@@ -22,10 +22,16 @@ class UnitTests(unittest.TestCase):
         student = Student("bob", "bobpass")
         student.set_points(15)
         assert student.points == 15
+      
+    def test_set_ranking(self):
+        student = Student("rob", "robpass")
+        student.set_points(10)
+        assert student.points == 10
 
     def test_new_admin(self):
         admin = Admin("rob", "robpass", 1001)
         assert admin.username == "rob" and admin.staff_id == 1001
+
 
     # pure function no side effects or integrations called
     def test_get_json(self):
@@ -77,4 +83,3 @@ class IntegrationTests(unittest.TestCase):
         update_user(1, "ronnie")
         user = get_user(1)
         assert user.username == "ronnie"
-        
