@@ -3,15 +3,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from App.main import create_app
 from App.database import db, create_db
-from App.models import User
-from App.controllers import (
-    create_user,
-    get_all_users_json,
-    login,
-    get_user,
-    get_user_by_username,
-    update_user
-)
+from App.models import Student, Admin
+from App.controllers import *
 
 
 LOGGER = logging.getLogger(__name__)
@@ -19,11 +12,20 @@ LOGGER = logging.getLogger(__name__)
 '''
    Unit Tests
 '''
-class UserUnitTests(unittest.TestCase):
+class UnitTests(unittest.TestCase):
 
-    def test_new_user(self):
-        user = User("bob", "bobpass")
-        assert user.username == "bob"
+    def test_new_student(self):
+        student = Student("bob", "bobpass")
+        assert student.username == "bob"
+
+    def test_set_points(self):
+        student = Student("bob", "bobpass")
+        student.set_points(15)
+        assert student.points == 15
+
+    def test_new_admin(self):
+        admin = Admin("rob", "robpass", 1001)
+        assert admin.username == "rob" and admin.staff_id == 1001
 
     # pure function no side effects or integrations called
     def test_get_json(self):
@@ -60,7 +62,7 @@ def test_authenticate():
     user = create_user("bob", "bobpass")
     assert login("bob", "bobpass") != None
 
-class UsersIntegrationTests(unittest.TestCase):
+class IntegrationTests(unittest.TestCase):
 
     def test_create_user(self):
         user = create_user("rick", "bobpass")
@@ -75,3 +77,4 @@ class UsersIntegrationTests(unittest.TestCase):
         update_user(1, "ronnie")
         user = get_user(1)
         assert user.username == "ronnie"
+        
