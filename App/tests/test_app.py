@@ -24,9 +24,16 @@ class UnitTests(unittest.TestCase):
         assert student.points == 15
       
     def test_set_ranking(self):
-        student = Student("rob", "robpass")
+        student = Student("bob", "bobpass")
         student.set_points(10)
         assert student.points == 10
+    
+    def test_previous_ranking(self):
+      student = Student("bob", "bobpass")
+      student.set_points(10)
+      student.set_previous_ranking(student.points)
+      student.set_points(5)
+      assert student.previous_ranking == 10
 
     def test_new_admin(self):
         admin = Admin("rob", "robpass", 1001)
