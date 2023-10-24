@@ -54,6 +54,18 @@ class UnitTests(unittest.TestCase):
     competition = Competition("Comp", admin.staff_id)
     assert competition.name == "Comp"
 
+  '''
+  Participation Unit Test  
+  '''
+    
+  def test_new_participation(self):
+    student = Student("Kim", "Possible")
+    admin = Admin("Ron", "Stoppable", 1001)
+    competition = Competition("Comp", admin.staff_id)
+    part = Participation(student.id, competition.id)
+    assert part.user_id == student.id and part.competition_id == competition.id
+
+
 '''
     Integration Tests
 '''
