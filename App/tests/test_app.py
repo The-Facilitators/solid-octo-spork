@@ -65,7 +65,14 @@ class UnitTests(unittest.TestCase):
     part = Participation(student.id, competition.id)
     assert part.user_id == student.id and part.competition_id == competition.id
 
-
+  def test_update_points(self):
+    student = Student("Kim", "Possible")
+    admin = Admin("Ron", "Stoppable", 1001)
+    competition = Competition("Comp", admin.staff_id)
+    part = Participation(student.id, competition.id)
+    part.update_points(10)
+    assert part.points_earned == 10
+  
 '''
     Integration Tests
 '''
