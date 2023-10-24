@@ -13,49 +13,56 @@ LOGGER = logging.getLogger(__name__)
    Unit Tests
 '''
 class UnitTests(unittest.TestCase):
-
-    def test_new_student(self):
+   
+   'Student Unit Test
+   def test_new_student(self):
         student = Student("bob", "bobpass")
         assert student.username == "bob"
 
-    def test_set_points(self):
+   def test_set_points(self):
         student = Student("bob", "bobpass")
         student.set_points(15)
         assert student.points == 15
       
-    def test_set_ranking(self):
+   def test_set_ranking(self):
         student = Student("bob", "bobpass")
         student.set_points(10)
         assert student.points == 10
     
-    def test_previous_ranking(self):
+   def test_previous_ranking(self):
       student = Student("bob", "bobpass")
       student.set_points(10)
       student.set_previous_ranking(student.points)
       student.set_points(5)
       assert student.previous_ranking == 10
+  
+   'Admin Unit Test
+   def test_new_admin(self):
+    admin = Admin("rob", "robpass", 1001)
+    assert admin.username == "rob" and admin.staff_id == 1001
 
-    def test_new_admin(self):
-        admin = Admin("rob", "robpass", 1001)
-        assert admin.username == "rob" and admin.staff_id == 1001
+   'Competition Unit Test
+   def test_new_competition(self):
+      competition = Competition("Comp", 1001)
+      assert competition.name == "Comp"
 
 
     # pure function no side effects or integrations called
-    def test_get_json(self):
-        user = User("bob", "bobpass")
-        user_json = user.get_json()
-        self.assertDictEqual(user_json, {"id":None, "username":"bob"})
+   def test_get_json(self):
+       user = User("bob", "bobpass")
+       user_json = user.get_json()
+       self.assertDictEqual(user_json, {"id":None, "username":"bob"})
     
-    def test_hashed_password(self):
-        password = "mypass"
-        hashed = generate_password_hash(password, method='sha256')
-        user = User("bob", password)
-        assert user.password != password
+   def test_hashed_password(self):
+       password = "mypass"
+       hashed = generate_password_hash(password, method='sha256')
+       user = User("bob", password)
+       assert user.password != password
 
-    def test_check_password(self):
-        password = "mypass"
-        user = User("bob", password)
-        assert user.check_password(password)
+   def test_check_password(self):
+       password = "mypass"
+       user = User("bob", password)
+       assert user.check_password(password)
 
 '''
     Integration Tests
