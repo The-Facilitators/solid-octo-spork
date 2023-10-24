@@ -20,6 +20,16 @@ class UnitTests(unittest.TestCase):
     student = Student("Kim", "Possible")
     assert student.username == "Kim"
 
+  def test_set_password(self):
+    student = Student("Kim", "Possible")
+    student.set_password("Possible")
+    assert student.password != "Possible"
+
+  def test_check_password(self):
+    student = Student("Kim", "Possible")
+    student.set_password("Possible")
+    assert student.check_password("Possible")
+
   def test_set_points(self):
     student = Student("Kim", "Possible")
     student.set_points(15)
@@ -38,6 +48,14 @@ class UnitTests(unittest.TestCase):
     assert student.previous_ranking == 10
 
   '''
+    def test_get_json(self):
+      student = Student("Kim", "Possible")
+      student.set_points(10)
+      user_json = student.get_json()
+      self.assertListEqual([{"id":1, "username":"Kim"}], user_jason)
+   '''
+  
+  '''
   Admin Unit Test
   '''
   
@@ -50,9 +68,9 @@ class UnitTests(unittest.TestCase):
   '''
   
   def test_new_competition(self):
-    admin = Admin("Ron", "Stoppable", 1001)
-    competition = Competition("Comp", admin.staff_id)
-    assert competition.name == "Comp"
+    admin = Admin("Ron", "Stoppable", 2)
+    competition = Competition("InfinityNBeyond", admin.staff_id)
+    assert competition.name == "InfinityNBeyond"
 
   '''
   Participation Unit Test  
@@ -61,17 +79,18 @@ class UnitTests(unittest.TestCase):
   def test_new_participation(self):
     student = Student("Kim", "Possible")
     admin = Admin("Ron", "Stoppable", 1001)
-    competition = Competition("Comp", admin.staff_id)
+    competition = Competition("InfinityNBeyond", admin.staff_id)
     part = Participation(student.id, competition.id)
     assert part.user_id == student.id and part.competition_id == competition.id
 
   def test_update_points(self):
     student = Student("Kim", "Possible")
     admin = Admin("Ron", "Stoppable", 1001)
-    competition = Competition("Comp", admin.staff_id)
+    competition = Competition("InfinityNBeyond", admin.staff_id)
     part = Participation(student.id, competition.id)
     part.update_points(10)
     assert part.points_earned == 10
+  
   
 '''
     Integration Tests
