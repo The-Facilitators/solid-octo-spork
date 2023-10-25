@@ -15,17 +15,16 @@ class Competition(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            "creator_id": self.creator_id,
-            "participants": [student.username for student in self.participants]
+            "creator_id": self.creator_id
         }
 
-    def to_dict(self):
+    """def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
             "creator_id": self.creator_id,
             "participants": [student.username for student in self.participants]
-        }
+        }"""
     
 
     def __repr__(self):
