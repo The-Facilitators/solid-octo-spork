@@ -44,11 +44,18 @@ def update_Admin(id, username):
         return db.session.commit()
     return None
 
-def notification(student):
-    if student.ranking != student.previous_ranking:
-        student.previous_ranking = student.ranking
-        db.session.add(student)
-        db.session.commit()
-        print(f'{student.username} has changed rankings to Rank {student.ranking}')
-    else:
-        print(f'{student.username} has not changed rankings')
+def display_admin_info(username):
+  admin = get_admin_by_username(username)
+  competition = []
+  if admin:
+    comps = Competition.query.all()
+    for comp in comps:
+      if comp.creator_id == admin.id:
+        competition.append(comp.name)
+    profile_info = {
+        "profile": admin.get_json(),
+        "competitions created": competition
+    }
+    return profile_info
+  else:
+    return None
