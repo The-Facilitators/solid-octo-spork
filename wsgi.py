@@ -19,16 +19,16 @@ migrate = get_migrate(app)
 def initialize():
     db.drop_all()
     db.create_all()
-    kim = create_admin('kim', 'kimpass', 1000)
-    rob = create_admin('rob', 'robpass', 1001)
-    ben = create_student('ben', 'benpass')
-    sally = create_student('sally', 'sallypass')
-    bob = create_student('bob', 'bobpass')
-    jake = create_student('jake', 'jakepass')
-    amy = create_student('amy', 'amypass')
-    comp1 = create_competition('CodeSprint', 'kim')
-    comp2 = create_competition('RunTime', 'rob')
-    comp3 = create_competition('HashCode', 'rob')
+    kim = create_Admin('kim', 'kimpass', 1000)
+    rob = create_Admin('rob', 'robpass', 1001)
+    ben = create_Student('ben', 'benpass')
+    sally = create_Student('sally', 'sallypass')
+    bob = create_Student('bob', 'bobpass')
+    jake = create_Student('jake', 'jakepass')
+    amy = create_Student('amy', 'amypass')
+    comp1 = create_Competition('CodeSprint', 'kim')
+    comp2 = create_Competition('RunTime', 'rob')
+    comp3 = create_Competition('HashCode', 'rob')
     with open('registration.csv') as file:
       reader = csv.DictReader(file)
       for row in reader:
@@ -51,7 +51,7 @@ def login_student_command(username, password):
 @click.argument("username", default="bob")
 @click.argument("password", default="bobpass")
 def create_student_command(username, password):
-    create_student(username, password)
+    create_Student(username, password)
 
 @student_cli.command("list", help="Lists students in the database")
 def list_student_command():
@@ -66,7 +66,7 @@ def register_student_command(username, competition_name):
 @student_cli.command("view-details", help="displays student information")
 @click.argument("username", default="bob")
 def display_student_info_command(username):
-    display_student_info(username)
+    print(display_student_info(username))
 
 @student_cli.command("notification", help="Notify a change in standings")
 @click.argument("username", default="bob")
@@ -90,13 +90,13 @@ def login_admin_command(username, password, staff_id):
 @click.argument("password", default="robpass")
 @click.argument("staff_id", default="1001")
 def create_admin_command(username, password, staff_id):
-    create_admin(username, password, staff_id)
+    create_Admin(username, password, staff_id)
 
 @admin_cli.command("create-competition", help="Creates a competition")
 @click.argument("competition_name", default="RunTime")
 @click.argument("username", default="rob")
-def create_competition_command(competition_name, username):
-    create_competition(competition_name, username)
+def create_competition_command(competition_name, admin_name):
+    create_Competition(competition_name, admin_name)
 
 @admin_cli.command("list", help="Lists admins in the database")
 def list_admins_command():
@@ -104,9 +104,8 @@ def list_admins_command():
 
 @admin_cli.command("view-details", help="displays admin information")
 @click.argument("username", default="rob")
-@click.argument("staff_id", default=1001)
-def display_admin_info_command(username, staff_id):
-    display_admin_info(username, staff_id)
+def display_admin_info_command(username):
+    print(display_admin_info(username))
 
 @admin_cli.command("add-results",help="enters scores of participants of the competition")
 @click.argument("admin_username", default="rob")
@@ -131,11 +130,11 @@ def list_participation_command():
 
 @user_cli.command("competition-details", help="displays competition details")
 def display_competition_details_command():
-    display_competition_details()
+    print(display_competition_details())
 
 @user_cli.command("rankings", help="displays competition ranking")
 def display_rankings_command():
-    display_rankings()
+    print(display_rankings())
 
 app.cli.add_command(user_cli)
 
@@ -146,7 +145,7 @@ Test Commands
 
 test = AppGroup('test', help='Testing commands') 
 
-@test.command("all", help="Run All tests")
+@test.command("cli", help="Run cli tests")
 @click.argument("type", default="all")
 def user_tests_command(type):
     if type == "unit":
