@@ -42,11 +42,11 @@ def get_ranking(id):
     student = get_student(id)
     return student.ranking
 
-#def sort_rankings(value):
-#  return value["total points"]
+def sort_rankings(value):
+  return value["total points"]
 
-def sort_rankings(student):
-    return student.points
+#def sort_rankings(student):
+#    return student.points
 
 def update_rankings():
   students = get_all_students_json()
@@ -112,3 +112,97 @@ def display_user_info(username):
             "participated_competitions": [comp.name for comp in student.competitions]
         }
         return profile_info
+
+def register_student(username, competition_name):
+  student = get_student_by_username(username)
+  if student:
+    competition = Competition.query.filter_by(name=competition_name).first()
+    if competition:
+      return student.participate_in_competition(competition)
+    else:
+      print(f'{competition_name} was not found')
+      return None
+  else:
+    print(f'{username} was not found')
+    return None
+
+def notify_student(username):
+  student = get_student_by_username(username)
+  
+  if student:
+    if student.ranking != student.previous_ranking:
+      student.previous_ranking = student.ranking
+      db.session.add(student)
+      db.session.commit()
+      print(f'{student.username} has changed rankings to Rank {student.ranking}')
+      return True
+    else:
+      print(f'{student.username} has not changed rankings')
+      return False
+  else:
+    print(f'{username} was not found')
+    return None
+
+def add_results(admin_username, student_username, competition_name, score):
+  comp = Competition.query.filter_by(name=competition_name).first()
+  admin = Admin.query.filter_by(username=admin_username).first()
+  
+  if not admin:
+    print(f'{admin_username} is not an admin')
+    return None
+  
+  if not comp:
+    print(f'{competition_name} is not a valid competition')
+    return None
+  
+  if comp.creator_id == admin.id:
+    student = Student.query.filter_by(username=student_username).first()
+
+    if not student:
+      print(f'{student_username} is not a valid username')
+      return None
+
+    for participant in comp.participants:
+      if participant.username == student.username:
+        participation = Participation.query.filter_by(user_id=student.id, competition_id=comp.id).first()
+        participation.update_points(score)
+        participation.points_earned = score
+        db.session.add(participation)
+        db.session.commit()
+        score = get_points(student.id)
+        student.set_points(score)
+        db.session.add(student)
+        db.session.commit()
+        update_rankings()
+        print("Score added!")
+        return True
+
+    print(f'{student_username} did not participate in {competition_name}')
+    return False
+  else:
+    print(f'{admin_username} does not have access to add results for {competition_name}')
+    return False
+
+def display_rankings():
+  students = get_all_students_json()
+  if not students:
+    print("No students found!")
+    return None
+  else:
+    rankings = []
+    count = 1
+    students.sort(key=sort_rankings,reverse=True)
+    curr_high = students[0]["total points"]
+    curr_rank = 1
+    for student in students:
+      if curr_high != student["total points"]:
+        curr_rank = count
+        curr_high = student["total points"]
+
+      stud = get_student(student["id"])
+      stud.set_previous_ranking(curr_rank)
+      db.session.add(stud)
+      db.session.commit()
+      rankings.append({"rank": curr_rank, "student": stud.username, "points": stud.points})
+      count += 1
+    return rankings
