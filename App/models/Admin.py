@@ -23,7 +23,8 @@ class Admin(User):
         return {
             "id": self.id,
             "username": self.username,
-            "role": 'admin'
+            "role": 'Admin',
+            "staff_id": self.staff_id
         }
 
     def __repr__(self):
