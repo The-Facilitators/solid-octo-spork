@@ -46,12 +46,30 @@ def login_Student(username, password):
         return student
     return None
 
+def login_student(username, password):
+  student = Student.query.filter_by(username=username).first()
+  if student and student.check_password(password):
+    print(f'Logged in as {username}')
+    return True
+  else:
+    print('Invalid credentials')
+    return False
+
 def login_Admin(username, password):
     admin = Admin.query.filter_by(username=username).first()
     if admin and admin.check_password(password):
         login_user(admin)
         return admin
     return None
+
+def login_admin(username, password, staff_id):
+  admin = Admin.query.filter_by(username=username).first()
+  if admin and admin.check_password(password) and int(admin.staff_id) == int(staff_id):
+    print(f'Logged in as {username}')
+    return True
+  else:
+    print('Invalid credentials')
+    return False
 
 def setup_flask_login(app):
     login_manager = LoginManager()
