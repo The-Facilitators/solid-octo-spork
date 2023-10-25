@@ -49,3 +49,26 @@ def get_all_participations():
     else:
         participant=[Participation.get_json() for Participation in participants]
         return participant
+
+def display_competition_details():
+  comps = get_all_competitions()
+  results = []
+  if not comps:
+    print("No competitions found!")
+  else:
+    for comp in comps:
+      competition = []
+      participations = []
+      print(comp.get_json())
+      competition.append(comp.get_json())
+      participants = Participation.query.filter_by(competition_id=comp.id).all()
+
+      if not participants:
+        print("No participants found!")
+      else:
+        for participant in participants:
+          print(participant.get_json())
+          participations.append(participant.get_json())
+      competition.append(participations)
+      results.append(competition)
+  return results
