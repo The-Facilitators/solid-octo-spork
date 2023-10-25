@@ -9,29 +9,26 @@ class Student(User):
     previous_ranking = db.Column(db.Integer, nullable=False, default=0)
 
     def participate_in_competition(self, competition):
-        registered = False
-        results = ""
-      
-        for comp in self.competitions:
-          if (comp.id == competition.id):
-            registered = True
-      
-        if isinstance(self, Student) and not registered:
-            participation = Participation(user_id=self.id, competition_id=competition.id)
-            try:
-              self.competitions.append(competition)
-              competition.participants.append(self)
-              db.session.commit()
-            except Exception as e:
-              db.session.rollback()
-            else:
-              print(f'{self.username} was registered for {competition.name}')
-              results += f'{self.username} was registered for {competition.name}'
-        else:
-            print(f'{self.username} is already registered for {competition.name}')
-            results += f'{self.username} is already registered for {competition.name}'
-          
-        return results
+      registered = False
+      for comp in self.competitions:
+        if (comp.id == competition.id):
+          registered = True
+
+      if isinstance(self, Student) and not registered:
+          participation = Participation(user_id=self.id, competition_id=competition.id)
+          try:
+            self.competitions.append(competition)
+            competition.participants.append(self)
+            db.session.commit()
+          except Exception as e:
+            db.session.rollback()
+            return None
+          else:
+            print(f'{self.username} was registered for {competition.name}')
+            return participation
+      else:
+          print(f'{self.username} is already registered for {competition.name}')
+          return None
 
     def set_points(self, points):
       self.points = points
