@@ -1,4 +1,4 @@
-from App.models import User
+"""from App.models import User
 from App.models import Admin
 from App.models import Student
 from App.models import Competition
@@ -6,7 +6,7 @@ from App.models import Competition
 from App.database import db
 from flask_jwt_extended import create_access_token
 
-"""
+
 def create_Admin(username, password,staff_id):
     newA = Admin(username=username, password=password,staff_id=staff_id)
     db.session.add(newA)
@@ -18,7 +18,7 @@ def create_Student(username, password):
     db.session.add(newStudent)
     db.session.commit()
     return newStudent   
-"""
+
 
 def get_student_by_username(username):
     return Student.query.filter_by(username=username).first()
@@ -100,5 +100,5 @@ def initialize():
 
 #//write a function to add a competition to a student
 
-
 ########################################
+"""
