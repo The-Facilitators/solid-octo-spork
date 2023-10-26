@@ -105,8 +105,9 @@ def display_student_info(username):
     if not student:
         return None
     else:
-        score = get_points(student.id)
-        student.set_points(score)
+        student.previous_ranking = student.ranking
+        db.session.add(student)
+        db.session.commit()
         profile_info = {
             "profile": student.get_json(),
             "participated_competitions": [comp.name for comp in student.competitions]
