@@ -1,4 +1,4 @@
-from App.models import User, Competition, Participation
+from App.models import User, Competition, Participation,Admin
 
 from App.database import db
 from flask_jwt_extended import create_access_token
@@ -18,6 +18,11 @@ from flask_jwt_extended import create_access_token
 """
 def create_Competition(name, creator_id):
     Here= Competition.query.filter_by(name=name).first()
+    admin= Admin.query.filter_by(username=creator_id).first()
+
+    if not admin:
+      return None
+
     if Here:
         print(f'{name} already exists!')
         return Here
