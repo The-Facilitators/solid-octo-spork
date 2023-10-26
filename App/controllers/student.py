@@ -1,4 +1,4 @@
-from App.models import User, Student, Competition, Participation
+from App.models import User, Student, Competition, Participation,Admin
 #from App.controllers import competition
 
 from App.database import db
@@ -99,7 +99,7 @@ def update_student(id, username):
     for comp in student.competitions:
       print(f'{comp.name} ')"""
 
-def display_user_info(username):
+def display_student_info(username):
     student = Student.query.filter_by(username=username).first()
 
     if not student:
@@ -143,6 +143,8 @@ def notify_student(username):
     print(f'{username} was not found')
     return None
 
+### Same creator ID issue, same change made. It worked 
+
 def add_results(admin_username, student_username, competition_name, score):
   comp = Competition.query.filter_by(name=competition_name).first()
   admin = Admin.query.filter_by(username=admin_username).first()
@@ -155,7 +157,7 @@ def add_results(admin_username, student_username, competition_name, score):
     print(f'{competition_name} is not a valid competition')
     return None
   
-  if comp.creator_id == admin.id:
+  if comp.creator_id == admin.username:
     student = Student.query.filter_by(username=student_username).first()
 
     if not student:

@@ -1,4 +1,4 @@
-from App.models import User, Admin
+from App.models import User, Admin, Competition
 
 from App.database import db
 from flask_jwt_extended import create_access_token
@@ -44,13 +44,22 @@ def update_Admin(id, username):
         return db.session.commit()
     return None
 
+'''
+We have an issue with the competitions created section
+it looks for the creator ID but we actually used creator ID 
+as the creator name in init so we could change it there or just 
+pivot n use the ID as the name, I just changed the function
+to search by username, it working that way
+'''
+
+
 def display_admin_info(username):
   admin = get_admin_by_username(username)
   competition = []
   if admin:
     comps = Competition.query.all()
     for comp in comps:
-      if comp.creator_id == admin.id:
+      if comp.creator_id == admin.username:
         competition.append(comp.name)
     profile_info = {
         "profile": admin.get_json(),

@@ -94,7 +94,7 @@ def create_admin_command(username, password, staff_id):
 
 @admin_cli.command("create-competition", help="Creates a competition")
 @click.argument("competition_name", default="RunTime")
-@click.argument("username", default="rob")
+@click.argument("admin_name", default="rob")
 def create_competition_command(competition_name, admin_name):
     create_Competition(competition_name, admin_name)
 
@@ -122,11 +122,11 @@ user_cli = AppGroup('user', help='User object commands')
 
 @user_cli.command("comp-list", help="Lists competitions in the database")
 def list_comp_command():
-    print(get_all_competitions_json())
+   print(get_all_competitions())
 
 @user_cli.command("participation-list", help="Lists participants in the database")
 def list_participation_command():
-    print(get_all_participations_json())
+    print(get_all_participations())
 
 @user_cli.command("competition-details", help="displays competition details")
 def display_competition_details_command():

@@ -39,10 +39,25 @@ def get_all_competitions():
     if not comps:
         return "No competitions found"
     else:
+        return comps
+
+def print_all_competitions():
+    comps=Competition.query.all()
+    if not comps:
+        return "No competitions found"
+    else:
         comp=[Competition.get_json() for Competition in comps]
         return comp
 
+
 def get_all_participations():
+    participants=Participation.query.all()
+    if not participants:
+        return "No participants found"
+    else:
+        return participants
+
+def print_all_participations():
     participants=Participation.query.all()
     if not participants:
         return "No participants found"
@@ -50,6 +65,12 @@ def get_all_participations():
         participant=[Participation.get_json() for Participation in participants]
         return participant
 
+
+'''
+The get_all_competitions  n get_all_participants function returns a dictionary but we need 
+an object for this function to work, I changed the functions so it to only returns the objects
+the inital functions were renamed to print_all_competitions n print_all_participations  
+'''
 def display_competition_details():
   comps = get_all_competitions()
   results = []
