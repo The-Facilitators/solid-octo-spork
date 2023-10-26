@@ -122,7 +122,7 @@ user_cli = AppGroup('user', help='User object commands')
 
 @user_cli.command("comp-list", help="Lists competitions in the database")
 def list_comp_command():
-   print(get_all_competitions())
+   print(print_all_competitions())
 
 @user_cli.command("participation-list", help="Lists participants in the database")
 def list_participation_command():

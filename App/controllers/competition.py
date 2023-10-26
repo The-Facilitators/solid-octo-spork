@@ -29,6 +29,7 @@ def create_Competition(name, creator_id):
     except Exception as e:
       db.session.rollback()
       print(f'Something went wrong creating {name}')
+      return None
     return newComp
 
 def get_competition(id):

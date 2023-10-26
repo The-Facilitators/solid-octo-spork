@@ -177,7 +177,7 @@ class IntegrationTests(unittest.TestCase):
       db.drop_all()
       db.create_all()
       admin = create_Admin("rob", "robpass", 1001)
-      assert create_Competition("CodeSprint", "jim") == None
+      assert create_Competition("CodeSprint", "jim") is None
 
     def test_student_list(self):
       db.drop_all()
@@ -214,6 +214,8 @@ class IntegrationTests(unittest.TestCase):
       admins = get_all_admins_json()
       self.assertEqual(admins, [{'id': 1, 'username': 'kim', 'role': 'Admin', "staff_id": 1000}, {'id': 2, 'username': 'rob', 'role': 'Admin', "staff_id": 1001}])
 
+## Same Creator ID issue
+
     def test_comp_list(self):
       db.drop_all()
       db.create_all()
@@ -222,9 +224,9 @@ class IntegrationTests(unittest.TestCase):
       comp1 = create_Competition("CodeSprint", "kim")
       comp2 = create_Competition("RunTime", "rob")
       comp3 = create_Competition("HashCode", "rob")
-      comps = get_all_competitions_json()
+      comps = print_all_competitions()
       
-      self.assertListEqual(comps, [{"id":1, "name":"CodeSprint", "creator_id": 1, "participants": []}, {"id":2, "name":"RunTime", "creator_id": 2, "participants": []}, {"id":3, "name":"HashCode", "creator_id": 2, "participants": []}])
+      self.assertListEqual(comps, [{"id":1, "name":"CodeSprint", "creator_id": "kim", "participants": []}, {"id":2, "name":"RunTime", "creator_id": "rob", "participants": []}, {"id":3, "name":"HashCode", "creator_id": "rob", "participants": []}])
 
     def test_participation_list(self):
       db.drop_all()
@@ -250,7 +252,7 @@ class IntegrationTests(unittest.TestCase):
         for row in reader:
           add_results(row['admin'], row['student'], row['comp'], row['score'])
 
-      participations = get_all_participations_json()
+      participations = print_all_participations()
       self.assertListEqual(participations, [{'id': 1, 'user_id': 1, 'competition_id': 1, 'points_earned': 10}, {'id': 2, 'user_id': 1, 'competition_id': 2, 'points_earned': 10}, {'id': 3, 'user_id': 1, 'competition_id': 3, 'points_earned': 5}, {'id': 4, 'user_id': 2, 'competition_id': 1, 'points_earned': 10}, {'id': 5, 'user_id': 2, 'competition_id': 3, 'points_earned': 10}, {'id': 6, 'user_id': 3, 'competition_id': 2, 'points_earned': 15}, {'id': 7, 'user_id': 3, 'competition_id': 3, 'points_earned': 0}, {'id': 8, 'user_id': 4, 'competition_id': 2, 'points_earned': 10}, {'id': 9, 'user_id': 5, 'competition_id': 1, 'points_earned': 20}])
   
     def test1_register_student(self):
@@ -317,6 +319,7 @@ class IntegrationTests(unittest.TestCase):
       comp3 = create_Competition('HashCode', 'rob')
       self.assertDictEqual(display_admin_info("rob"), {"profile":{'id': 2, 'username': 'rob', 'role': 'Admin', 'staff_id': 1001}, "competitions created": ["RunTime", "HashCode"]})
   
+  ## Same thing
     def test_competition_details(self):
       db.drop_all()
       db.create_all()
@@ -341,7 +344,7 @@ class IntegrationTests(unittest.TestCase):
         for row in reader:
           add_results(row['admin'], row['student'], row['comp'], row['score'])
       
-      self.assertListEqual(display_competition_details(), [[{'id': 1, 'name': 'CodeSprint', "creator_id": 1, "participants": ["ben", "sally", "amy"]}, [{'id': 1, 'user_id': 1, 'competition_id': 1, 'points_earned': 10}, {'id': 4, 'user_id': 2, 'competition_id': 1, 'points_earned': 10}, {'id': 9, 'user_id': 5, 'competition_id': 1, 'points_earned': 20}]], [{'id': 2, 'name': 'RunTime', "creator_id": 2, "participants": ["ben", "bob", "jake"]}, [{'id': 2, 'user_id': 1, 'competition_id': 2, 'points_earned': 10}, {'id': 6, 'user_id': 3, 'competition_id': 2, 'points_earned': 15}, {'id': 8, 'user_id': 4, 'competition_id': 2, 'points_earned': 10}]], [{'id': 3, 'name': 'HashCode', "creator_id": 2, "participants": ["ben", "sally", "bob"]}, [{'id': 3, 'user_id': 1, 'competition_id': 3, 'points_earned': 5}, {'id': 5, 'user_id': 2, 'competition_id': 3, 'points_earned': 10}, {'id': 7, 'user_id': 3, 'competition_id': 3, 'points_earned': 0}]]])
+      self.assertListEqual(display_competition_details(), [[{'id': 1, 'name': 'CodeSprint', "creator_id": "kim", "participants": ["ben", "sally", "amy"]}, [{'id': 1, 'user_id': 1, 'competition_id': 1, 'points_earned': 10}, {'id': 4, 'user_id': 2, 'competition_id': 1, 'points_earned': 10}, {'id': 9, 'user_id': 5, 'competition_id': 1, 'points_earned': 20}]], [{'id': 2, 'name': 'RunTime', "creator_id": "rob", "participants": ["ben", "bob", "jake"]}, [{'id': 2, 'user_id': 1, 'competition_id': 2, 'points_earned': 10}, {'id': 6, 'user_id': 3, 'competition_id': 2, 'points_earned': 15}, {'id': 8, 'user_id': 4, 'competition_id': 2, 'points_earned': 10}]], [{'id': 3, 'name': 'HashCode', "creator_id": "rob", "participants": ["ben", "sally", "bob"]}, [{'id': 3, 'user_id': 1, 'competition_id': 3, 'points_earned': 5}, {'id': 5, 'user_id': 2, 'competition_id': 3, 'points_earned': 10}, {'id': 7, 'user_id': 3, 'competition_id': 3, 'points_earned': 0}]]])
 
     def test_display_rankings(self):
       db.drop_all()
