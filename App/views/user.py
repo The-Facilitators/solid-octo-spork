@@ -128,7 +128,7 @@ def create_competition():
     data = request.json
     admin = Admin.query.filter_by(staff_id=data['CreatorId']).first()
     if admin:
-      comp=get_competition(data['name'])
+      comp=get_competition_by_name(data['name'])
       if comp is None:
         comp=create_Competition(data['name'], data['CreatorId'])
         return jsonify({'message': f"Competition {comp.name} created"})
