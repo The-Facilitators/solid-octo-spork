@@ -26,16 +26,19 @@ def create_Competition(name, creator_id):
     if Here:
         print(f'{name} already exists!')
         return Here
+        
     newComp = Competition(name=name, creator_id=creator_id)
     try:
       db.session.add(newComp)
       db.session.commit()
       print(f'{name} created!')
+      return newComp
+
     except Exception as e:
       db.session.rollback()
       print(f'Something went wrong creating {name}')
       return None
-    return newComp
+    #return newComp
 
 def get_competition(id):
   return Competition.query.get(id)
