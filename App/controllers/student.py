@@ -158,7 +158,7 @@ def add_results(admin_username, student_username, competition_name, score):
     print(f'{competition_name} is not a valid competition')
     return None
   
-  if comp.creator_id == admin.username:
+  if comp.creator_id == admin.staff_id:
     student = Student.query.filter_by(username=student_username).first()
 
     if not student:

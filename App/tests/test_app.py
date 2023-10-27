@@ -170,14 +170,14 @@ class IntegrationTests(unittest.TestCase):
       db.drop_all()
       db.create_all()
       admin = create_Admin("rob", "robpass", 1001)
-      comp = create_Competition("RunTime", "rob")
+      comp = create_Competition("RunTime", 1001)
       assert comp.name == "RunTime"
 
     def test2_create_competition(self):
       db.drop_all()
       db.create_all()
       admin = create_Admin("rob", "robpass", 1001)
-      assert create_Competition("CodeSprint", "jim") is None
+      assert create_Competition("CodeSprint", 10) is None
 
     def test_student_list(self):
       db.drop_all()
@@ -189,9 +189,9 @@ class IntegrationTests(unittest.TestCase):
       bob = create_Student('bob', 'bobpass')
       jake = create_Student('jake', 'jakepass')
       amy = create_Student('amy', 'amypass')
-      comp1 = create_Competition('CodeSprint', 'kim')
-      comp2 = create_Competition('RunTime', 'rob')
-      comp3 = create_Competition('HashCode', 'rob')
+      comp1 = create_Competition('CodeSprint', 1000)
+      comp2 = create_Competition('RunTime', 1001)
+      comp3 = create_Competition('HashCode', 1001)
 
       with open('registration.csv') as file:
         reader = csv.DictReader(file)
@@ -221,12 +221,12 @@ class IntegrationTests(unittest.TestCase):
       db.create_all()
       admin = create_Admin("kim", "kimpass", 1000)
       admin = create_Admin("rob", "robpass", 1001)
-      comp1 = create_Competition("CodeSprint", "kim")
-      comp2 = create_Competition("RunTime", "rob")
-      comp3 = create_Competition("HashCode", "rob")
+      comp1 = create_Competition("CodeSprint", 1000)
+      comp2 = create_Competition("RunTime", 1001)
+      comp3 = create_Competition("HashCode", 1001)
       comps = print_all_competitions()
       
-      self.assertListEqual(comps, [{"id":1, "name":"CodeSprint", "creator_id": "kim", "participants": []}, {"id":2, "name":"RunTime", "creator_id": "rob", "participants": []}, {"id":3, "name":"HashCode", "creator_id": "rob", "participants": []}])
+      self.assertListEqual(comps, [{"id":1, "name":"CodeSprint", "creator_id": 1000, "participants": []}, {"id":2, "name":"RunTime", "creator_id": 1001, "participants": []}, {"id":3, "name":"HashCode", "creator_id": 1001, "participants": []}])
 
     def test_participation_list(self):
       db.drop_all()
@@ -238,9 +238,9 @@ class IntegrationTests(unittest.TestCase):
       bob = create_Student('bob', 'bobpass')
       jake = create_Student('jake', 'jakepass')
       amy = create_Student('amy', 'amypass')
-      comp1 = create_Competition('CodeSprint', 'kim')
-      comp2 = create_Competition('RunTime', 'rob')
-      comp3 = create_Competition('HashCode', 'rob')
+      comp1 = create_Competition('CodeSprint', 1000)
+      comp2 = create_Competition('RunTime', 1001)
+      comp3 = create_Competition('HashCode', 1001)
 
       with open('registration.csv') as file:
         reader = csv.DictReader(file)
@@ -260,15 +260,17 @@ class IntegrationTests(unittest.TestCase):
       db.create_all()
       admin = create_Admin("rob", "robpass", 1001)
       student = create_Student("bob", "bobpass")
-      comp = create_Competition("RunTime", "rob")
+      comp = create_Competition("RunTime", 1001)
       assert register_student("bob", "RunTime") != None
 
+
+## The test passed but I don't undertand it 
     def test2_register_student(self):
       db.drop_all()
       db.create_all()
       admin = create_Admin("rob", "robpass", 1001)
       student = create_Student("bob", "bobpass")
-      comp = create_Competition("RunTime", "rob")
+      comp = create_Competition("RunTime", 1001)
       register_student("bob", "RunTime")
       assert register_student("bob", "RunTime") == None
 
@@ -277,7 +279,7 @@ class IntegrationTests(unittest.TestCase):
       db.create_all()
       admin = create_Admin("rob", "robpass", 1001)
       student = create_Student("bob", "bobpass")
-      comp = create_Competition("RunTime", "rob")
+      comp = create_Competition("RunTime", 1001)
       register_student("bob", "RunTime")
       assert add_results("rob", "bob", "RunTime", 15) == True
 
@@ -286,7 +288,7 @@ class IntegrationTests(unittest.TestCase):
       db.create_all()
       admin = create_Admin("rob", "robpass", 1001)
       student = create_Student("bob", "bobpass")
-      comp = create_Competition("RunTime", "rob")
+      comp = create_Competition("RunTime", 1001)
       assert add_results("rob", "bob", "RunTime", 15) == False
 
     def test3_add_results(self):
@@ -295,7 +297,7 @@ class IntegrationTests(unittest.TestCase):
       admin = create_Admin("kim", "kimpass", 1000)
       admin1 = create_Admin("rob", "robpass", 1001)
       student = create_Student("bob", "bobpass")
-      comp = create_Competition("RunTime", "rob")
+      comp = create_Competition("RunTime", 1001)
       register_student("bob", "RunTime")
       assert add_results("kim", "bob", "RunTime", 15) == False
   
@@ -304,7 +306,7 @@ class IntegrationTests(unittest.TestCase):
       db.create_all()
       admin = create_Admin("rob", "robpass", 1001)
       student = create_Student("bob", "bobpass")
-      comp = create_Competition("RunTime", "rob")
+      comp = create_Competition("RunTime", 1001)
       register_student("bob", "RunTime")
       add_results("rob", "bob", "RunTime", 15)
       self.assertDictEqual(display_student_info("bob"), {"profile": {'id': 1, 'username': 'bob', 'role': 'Student', 'total points': 15, 'overall rank': 1}, "participated_competitions": ['RunTime']})
@@ -314,9 +316,9 @@ class IntegrationTests(unittest.TestCase):
       db.create_all()
       admin = create_Admin("kim", "kimpass", 1000)
       admin1 = create_Admin("rob", "robpass", 1001)
-      comp1 = create_Competition('CodeSprint', 'kim')
-      comp2 = create_Competition('RunTime', 'rob')
-      comp3 = create_Competition('HashCode', 'rob')
+      comp1 = create_Competition('CodeSprint', 1000)
+      comp2 = create_Competition('RunTime', 1001)
+      comp3 = create_Competition('HashCode', 1001)
       self.assertDictEqual(display_admin_info("rob"), {"profile":{'id': 2, 'username': 'rob', 'role': 'Admin', 'staff_id': 1001}, "competitions created": ["RunTime", "HashCode"]})
   
   ## Same thing
@@ -330,9 +332,9 @@ class IntegrationTests(unittest.TestCase):
       bob = create_Student('bob', 'bobpass')
       jake = create_Student('jake', 'jakepass')
       amy = create_Student('amy', 'amypass')
-      comp1 = create_Competition('CodeSprint', 'kim')
-      comp2 = create_Competition('RunTime', 'rob')
-      comp3 = create_Competition('HashCode', 'rob')
+      comp1 = create_Competition('CodeSprint', 1000)
+      comp2 = create_Competition('RunTime', 1001)
+      comp3 = create_Competition('HashCode', 1001)
 
       with open('registration.csv') as file:
         reader = csv.DictReader(file)
@@ -344,7 +346,7 @@ class IntegrationTests(unittest.TestCase):
         for row in reader:
           add_results(row['admin'], row['student'], row['comp'], row['score'])
       
-      self.assertListEqual(display_competition_details(), [[{'id': 1, 'name': 'CodeSprint', "creator_id": "kim", "participants": ["ben", "sally", "amy"]}, [{'id': 1, 'user_id': 1, 'competition_id': 1, 'points_earned': 10}, {'id': 4, 'user_id': 2, 'competition_id': 1, 'points_earned': 10}, {'id': 9, 'user_id': 5, 'competition_id': 1, 'points_earned': 20}]], [{'id': 2, 'name': 'RunTime', "creator_id": "rob", "participants": ["ben", "bob", "jake"]}, [{'id': 2, 'user_id': 1, 'competition_id': 2, 'points_earned': 10}, {'id': 6, 'user_id': 3, 'competition_id': 2, 'points_earned': 15}, {'id': 8, 'user_id': 4, 'competition_id': 2, 'points_earned': 10}]], [{'id': 3, 'name': 'HashCode', "creator_id": "rob", "participants": ["ben", "sally", "bob"]}, [{'id': 3, 'user_id': 1, 'competition_id': 3, 'points_earned': 5}, {'id': 5, 'user_id': 2, 'competition_id': 3, 'points_earned': 10}, {'id': 7, 'user_id': 3, 'competition_id': 3, 'points_earned': 0}]]])
+      self.assertListEqual(display_competition_details(), [[{'id': 1, 'name': 'CodeSprint', "creator_id": 1000, "participants": ["ben", "sally", "amy"]}, [{'id': 1, 'user_id': 1, 'competition_id': 1, 'points_earned': 10}, {'id': 4, 'user_id': 2, 'competition_id': 1, 'points_earned': 10}, {'id': 9, 'user_id': 5, 'competition_id': 1, 'points_earned': 20}]], [{'id': 2, 'name': 'RunTime', "creator_id": 1001, "participants": ["ben", "bob", "jake"]}, [{'id': 2, 'user_id': 1, 'competition_id': 2, 'points_earned': 10}, {'id': 6, 'user_id': 3, 'competition_id': 2, 'points_earned': 15}, {'id': 8, 'user_id': 4, 'competition_id': 2, 'points_earned': 10}]], [{'id': 3, 'name': 'HashCode', "creator_id": 1001, "participants": ["ben", "sally", "bob"]}, [{'id': 3, 'user_id': 1, 'competition_id': 3, 'points_earned': 5}, {'id': 5, 'user_id': 2, 'competition_id': 3, 'points_earned': 10}, {'id': 7, 'user_id': 3, 'competition_id': 3, 'points_earned': 0}]]])
 
     def test_display_rankings(self):
       db.drop_all()
@@ -356,9 +358,9 @@ class IntegrationTests(unittest.TestCase):
       bob = create_Student('bob', 'bobpass')
       jake = create_Student('jake', 'jakepass')
       amy = create_Student('amy', 'amypass')
-      comp1 = create_Competition('CodeSprint', 'kim')
-      comp2 = create_Competition('RunTime', 'rob')
-      comp3 = create_Competition('HashCode', 'rob')
+      comp1 = create_Competition('CodeSprint', 1000)
+      comp2 = create_Competition('RunTime', 1001)
+      comp3 = create_Competition('HashCode', 1001)
 
       with open('registration.csv') as file:
         reader = csv.DictReader(file)
@@ -382,9 +384,9 @@ class IntegrationTests(unittest.TestCase):
       bob = create_Student('bob', 'bobpass')
       jake = create_Student('jake', 'jakepass')
       amy = create_Student('amy', 'amypass')
-      comp1 = create_Competition('CodeSprint', 'kim')
-      comp2 = create_Competition('RunTime', 'rob')
-      comp3 = create_Competition('HashCode', 'rob')
+      comp1 = create_Competition('CodeSprint', 1000)
+      comp2 = create_Competition('RunTime', 1001)
+      comp3 = create_Competition('HashCode', 1001)
 
       with open('registration.csv') as file:
         reader = csv.DictReader(file)
@@ -409,9 +411,9 @@ class IntegrationTests(unittest.TestCase):
       bob = create_Student('bob', 'bobpass')
       jake = create_Student('jake', 'jakepass')
       amy = create_Student('amy', 'amypass')
-      comp1 = create_Competition('CodeSprint', 'kim')
-      comp2 = create_Competition('RunTime', 'rob')
-      comp3 = create_Competition('HashCode', 'rob')
+      comp1 = create_Competition('CodeSprint', 1000)
+      comp2 = create_Competition('RunTime', 1001)
+      comp3 = create_Competition('HashCode', 1001)
 
       with open('registration.csv') as file:
         reader = csv.DictReader(file)

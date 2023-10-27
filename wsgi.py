@@ -127,6 +127,7 @@ def list_comp_command():
 @user_cli.command("participation-list", help="Lists participants in the database")
 def list_participation_command():
     print(get_all_participations())
+   # print(print_all_participations())
 
 @user_cli.command("competition-details", help="displays competition details")
 def display_competition_details_command():

@@ -18,7 +18,8 @@ from flask_jwt_extended import create_access_token
 """
 def create_Competition(name, creator_id):
     Here= Competition.query.filter_by(name=name).first()
-    admin= Admin.query.filter_by(username=creator_id).first()
+    #Staff ID set to creator Id and and not the username
+    admin= Admin.query.filter_by(staff_id=creator_id).first()
 
     if not admin:
       return None

@@ -59,7 +59,7 @@ def display_admin_info(username):
   if admin:
     comps = Competition.query.all()
     for comp in comps:
-      if comp.creator_id == admin.username:
+      if comp.creator_id == admin.staff_id:
         competition.append(comp.name)
     profile_info = {
         "profile": admin.get_json(),
